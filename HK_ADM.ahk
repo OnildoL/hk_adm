@@ -93,6 +93,25 @@ Gui, Show
 
 return
 
+;===============================================================================
+
+Log:
+if (A_GuiEvent != "DoubleClick") {
+  return
+}
+
+ButtonAbrir_log:
+GuiControlGet, Log
+
+Run, %Log%,, UseErrorLevel
+
+if (ErrorLevel = "ERROR") {
+  MsgBox, Nao foi possivel iniciar o arquivo especificado.
+}
+return
+
+;===============================================================================
+
 Script:
 if (A_GuiEvent != "DoubleClick") {
   return
@@ -110,6 +129,8 @@ if (ErrorLevel = "ERROR") {
   MsgBox, Nao foi possivel iniciar o arquivo especificado.
 }
 return
+
+;===============================================================================
 
 ButtonAtualizar:
 Gui, Destroy
