@@ -3,17 +3,19 @@
 Gui, Font, s12,  Verdana
 Gui, Add, Tab2,, Informacoes|Relatorios|Scripts|Usuario
 
-FileReadLine, varUser,     %A_ScriptDir%\env.ahk, 2
-FileReadLine, varPassword, %A_ScriptDir%\env.ahk, 3
-FileReadLine, varTerminal, %A_ScriptDir%\env.ahk, 4
-FileReadLine, varSeller,   %A_ScriptDir%\env.ahk, 5
-FileReadLine, varStore,    %A_ScriptDir%\env.ahk, 6
+FileReadLine, varUser,       %A_ScriptDir%\env.ahk, 2
+FileReadLine, varPassword,   %A_ScriptDir%\env.ahk, 3
+FileReadLine, varTerminal,   %A_ScriptDir%\env.ahk, 4
+FileReadLine, varSeller,     %A_ScriptDir%\env.ahk, 5
+FileReadLine, varStore,      %A_ScriptDir%\env.ahk, 6
+FileReadLine, varNewSession, %A_ScriptDir%\env.ahk, 7
 
-RegExMatch(varUser, "(\d+)",       userFound)
-RegExMatch(varPassword, "(\d+)",   passwordFound)
-RegExMatch(varTerminal, "(NF\d+)", terminalFounnd)
-RegExMatch(varSeller, "(\d+)",     sellerFound)
-RegExMatch(varStore, "(\d+)",      storeFound)
+RegExMatch(varUser, "(\d+)",          userFound)
+RegExMatch(varPassword, "(\d+)",      passwordFound)
+RegExMatch(varTerminal, "(NF\d+)",    terminalFounnd)
+RegExMatch(varSeller, "(\d+)",        sellerFound)
+RegExMatch(varStore, "(\d+)",         storeFound)
+RegExMatch(varNewSession, "(\D{5}$)", newSessionFound)
 
 Gui, Add, Text,,         Dados do usuario registrado
 Gui, Add, Text, y+1,     -----------------------------------------------------
@@ -42,6 +44,7 @@ Loop, %A_ScriptDir%\src\scripts\logs\*.* {
 
 Gui, Add, Button, -Default x32 y+8, Abrir_log
 Gui, Add, Button, -Default x+10,    Atualizar
+Gui, Add, Button, -Default x+10,    Limpar_logs
 
 ;===============================================================================
 ;=============================        Scripts       ============================
@@ -54,6 +57,7 @@ Gui, Add, ListBox, vScript gScript w372 r6
 
 Gui, Add, Radio,  vSessionOption, Criar uma sessao do script
 Gui, Add, Radio,, Utilizar uma sessao ja criada
+
 Gui, Add, Button, -Default x32 y+8, Executar
 Gui, Add, Button, -Default x+10, Aplicar_alteracoes
 
@@ -78,16 +82,16 @@ gui, add, Text,,          Loja
 
 Gui, Add, Edit, ys vUser  w278,          %userFound%
 Gui, Add, Edit, vPassword w278 Password, %passwordFound%
-Gui, Add, Edit, vTerminal w278,          %storeFound%
-Gui, Add, Edit, vSeller   w278,          %terminalFounnd%
-Gui, Add, Edit, vStore    w278,          %sellerFound%
+Gui, Add, Edit, vTerminal w278,          %terminalFounnd%
+Gui, Add, Edit, vSeller   w278,          %sellerFound%
+Gui, Add, Edit, vStore    w278,          %storeFound%
 
 Gui, Add, Button, -Default x32 y+10 w370, Salvar
 
 Gui, Tab
 
 Gui, Add, Text, xm, HK_ADM Created by Onildo.
-Gui, Add, Text, x+5 cRed, v0.1.0-alpha
+Gui, Add, Text, x+5 cRed, v0.1.2-alpha
 
 Gui, Show
 
@@ -110,6 +114,21 @@ if (ErrorLevel = "ERROR") {
 }
 return
 
+ButtonAtualizar:
+Gui, Destroy
+Run, %A_ScriptDir%\HK_ADM.ahk
+return
+
+ButtonLimpar_logs:
+MsgBox, 4,, Deseja realmente deletar todos os arquivos de logs?
+IfMsgBox, No
+return
+Loop, %A_ScriptDir%\src\scripts\logs\*.* {
+  FileDelete, %A_LoopFileFullPath%
+}
+Gui, Destroy
+Run, %A_ScriptDir%\HK_ADM.ahk
+return
 ;===============================================================================
 
 Script:
@@ -130,16 +149,51 @@ if (ErrorLevel = "ERROR") {
 }
 return
 
-;===============================================================================
+ButtonAplicar_alteracoes:
+Gui, Submit
 
-ButtonAtualizar:
-Gui, Destroy
+sessionOption := SessionOption == 1 ? "true" : "false"
+
+changeUserData = 
+(
+LINK_WEBSITE_NERUS = http://leitura.nerus.com.br
+USER = %userFound%
+PASSWORD = %passwordFound%
+TERMINAL = %terminalFounnd%
+SELLER = %sellerFound%
+STORE = %storeFound%
+NEW_SESSION := %sessionOption%
+)
+
+FileDelete %A_ScriptDir%\env.ahk
+FileAppend, %changeUserData%, %A_ScriptDir%\env.ahk
+
 Run, %A_ScriptDir%\HK_ADM.ahk
 return
 
+;===============================================================================
+
 ButtonSalvar:
 Gui, Submit
-MsgBox, Dados do usuario:`n%User%`n%Password%`n%Terminal%`n%Seller%`n%Store%
+
+StringUpper, outTerminal, Terminal
+
+changeUserData = 
+(
+LINK_WEBSITE_NERUS = http://leitura.nerus.com.br
+USER = %User%
+PASSWORD = %Password%
+TERMINAL = %outTerminal%
+SELLER = %Seller%
+STORE = %Store%
+NEW_SESSION := %newSessionFound%
+)
+
+FileDelete %A_ScriptDir%\env.ahk
+FileAppend, %changeUserData%, %A_ScriptDir%\env.ahk
+
+MsgBox, Dados do usuario atualizados com sucesso.
+
 Run, %A_ScriptDir%\HK_ADM.ahk
 return
 
