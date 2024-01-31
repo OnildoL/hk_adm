@@ -1,7 +1,10 @@
 #SingleInstance, Force
 
+#Include, %A_ScriptDir%\env.ahk
+
+; Gui +AlwaysOnTop
 Gui, Font, s12,  Verdana
-Gui, Add, Tab2,, Informacoes|Relatorios|Scripts|Usuario
+Gui, Add, Tab2,, Informacoes|Opcoes|Relatorios|Scripts|Usuario
 
 FileReadLine, varUser,       %A_ScriptDir%\env.ahk, 2
 FileReadLine, varPassword,   %A_ScriptDir%\env.ahk, 3
@@ -30,10 +33,20 @@ Gui, Add, Text, c0f6be9,         %terminalFounnd%
 Gui, Add, Text, c0f6be9,         %sellerFound%
 
 ;===============================================================================
-;=============================       Relatorios      ===========================
+;=============================         Opcoes        ===========================
 ;===============================================================================
 
 Gui, Tab, 2
+
+Gui, Add, Text,,         Planilha principal
+Gui, Add, Text, y+1,     -----------------------------------------------------
+Gui, Add, Button, -Default x32 y+8, Abrir planilha
+
+;===============================================================================
+;=============================       Relatorios      ===========================
+;===============================================================================
+
+Gui, Tab, 3
 
 Gui, Add, Text,,   Selecione um arquivo de log a ser aberto
 Gui, Add, ListBox, vLog gLog w372 r6
@@ -42,24 +55,27 @@ Loop, %A_ScriptDir%\src\scripts\logs\*.* {
   GuiControl,, Log, %A_LoopFileFullPath%
 }
 
-Gui, Add, Button, -Default x32 y+8, Abrir_log
+Gui, Add, Button, -Default x32 y+8, Abrir log
 Gui, Add, Button, -Default x+10,    Atualizar
-Gui, Add, Button, -Default x+10,    Limpar_logs
+Gui, Add, Button, -Default x+10,    Limpar logs
 
 ;===============================================================================
 ;=============================        Scripts       ============================
 ;===============================================================================
 
-Gui, Tab, 3
+Gui, Tab, 4
 
 Gui, Add, Text,,   Selecione um script a ser executado
 Gui, Add, ListBox, vScript gScript w372 r6
 
-Gui, Add, Radio,  vSessionOption, Criar uma sessao do script
-Gui, Add, Radio,, Utilizar uma sessao ja criada
+Gui, Add, CheckBox, vLogin,         Realizar login nerus
+Gui, Add, CheckBox, vSessionOption, Criar uma sessao
+
+GuiControl,, Login, % LOGIN ? "1" : "0"
+GuiControl,, SessionOption, % NEW_SESSION ? "1" : "0"
 
 Gui, Add, Button, -Default x32 y+8, Executar
-Gui, Add, Button, -Default x+10, Aplicar_alteracoes
+Gui, Add, Button, -Default x+10, Aplicar alteracoes
 
 Loop, %A_ScriptDir%\src\scripts\*.* {
   GuiControl,, Script, %A_LoopFileFullPath%
@@ -69,7 +85,7 @@ Loop, %A_ScriptDir%\src\scripts\*.* {
 ;=============================        Usuario       ============================
 ;===============================================================================
 
-Gui, Tab, 4
+Gui, Tab, 5
 
 Gui, Add, Text,,         Atualizar dados do usuario
 Gui, Add, Text, y+1,     -----------------------------------------------------
@@ -91,12 +107,16 @@ Gui, Add, Button, -Default x32 y+10 w370, Salvar
 Gui, Tab
 
 Gui, Add, Text, xm, HK_ADM Created by Onildo.
-Gui, Add, Text, x+5 cRed, v0.1.2-alpha
+Gui, Add, Text, x+5 cRed, v0.1.4-alpha
 
 Gui, Show
 
 return
 
+;===============================================================================
+ButtonAbrirplanilha:
+Run, %A_ScriptDir%\src\scripts\spreadsheets\center_panel.xlsb
+return
 ;===============================================================================
 
 Log:
@@ -104,7 +124,7 @@ if (A_GuiEvent != "DoubleClick") {
   return
 }
 
-ButtonAbrir_log:
+ButtonAbrirlog:
 GuiControlGet, Log
 
 Run, %Log%,, UseErrorLevel
@@ -119,7 +139,7 @@ Gui, Destroy
 Run, %A_ScriptDir%\HK_ADM.ahk
 return
 
-ButtonLimpar_logs:
+ButtonLimparlogs:
 MsgBox, 4,, Deseja realmente deletar todos os arquivos de logs?
 IfMsgBox, No
 return
@@ -149,10 +169,12 @@ if (ErrorLevel = "ERROR") {
 }
 return
 
-ButtonAplicar_alteracoes:
+ButtonAplicaralteracoes:
 Gui, Submit
 
 sessionOption := SessionOption == 1 ? "true" : "false"
+newLogin      := Login == 1 ? "true" : "false"
+scriptdir     := "%" . "A_ScriptDir" . "%"
 
 changeUserData = 
 (
@@ -163,6 +185,8 @@ TERMINAL = %terminalFounnd%
 SELLER = %sellerFound%
 STORE = %storeFound%
 NEW_SESSION := %sessionOption%
+SPREADSHEET_PATH = %scriptdir%\spreadsheets\center_panel.xlsb
+LOGIN := %newLogin%
 )
 
 FileDelete %A_ScriptDir%\env.ahk
@@ -178,6 +202,9 @@ Gui, Submit
 
 StringUpper, outTerminal, Terminal
 
+newLogin  := Login == 1 ? "true" : "false"
+scriptdir := "%" . "A_ScriptDir" . "%"
+
 changeUserData = 
 (
 LINK_WEBSITE_NERUS = http://leitura.nerus.com.br
@@ -187,6 +214,8 @@ TERMINAL = %outTerminal%
 SELLER = %Seller%
 STORE = %Store%
 NEW_SESSION := %newSessionFound%
+SPREADSHEET_PATH = %scriptdir%\spreadsheets\center_panel.xlsb
+LOGIN := %newLogin%
 )
 
 FileDelete %A_ScriptDir%\env.ahk
