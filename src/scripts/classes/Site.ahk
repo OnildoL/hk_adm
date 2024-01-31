@@ -1,22 +1,39 @@
 #Include %A_ScriptDir%\libraries\web\Rufaydium.ahk
+#Include %A_ScriptDir%\classes\Logger.ahk
 
 class Site {
+  logger := ""
+
   __new() {
+    this.logger := new Logger()
+    this.logger.setLogFile("hkadm_error")
   }
 
   createSession(link) {
-    chrome := new Rufaydium()
-    page   := chrome.NewSession()
+    try {
+      chrome := new Rufaydium()
+      page   := chrome.NewSession()
 
-    page.Navigate(link)
+      page.Navigate(link)
 
-    return page
+      return { page: page, chrome: chrome }
+    } catch e {
+      message := % "Exception what: " e.what " file: " e.file . " line:" e.line " message: " e.message " extra:" e.extra
+      this.logger.addError(message)
+      MsgBox, 16,, Falha ao tentar criar uma sessao.
+    }
   }
 
   getSessionInstance(tab := 1) {
-    chrome  := new Rufaydium()
-    session := chrome.getSession(tab)
+    try {
+      chrome  := new Rufaydium()
+      session := chrome.getSession(tab)
 
-    return session
+      return { page: session, chrome: chrome }
+    } catch e {
+      message := % "Exception what: " e.what " file: " e.file . " line:" e.line " message: " e.message " extra:" e.extra
+      this.logger.addError(message)
+      MsgBox, 16,, Falha ao tentar utilizar uma sessao existente, certifique-se de que realmente existe uma sessao criada.
+    }
   }
 }

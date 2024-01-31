@@ -1,8 +1,12 @@
+#Include %A_ScriptDir%\classes\Logger.ahk
+
 class Excel {
   static instance := ComObjCreate("Excel.Application")
+  logger          := ""
 
   __new() {
-
+    this.logger := new Logger()
+    this.logger.setLogFile("hkadm_error")
   }
 
   createNewTab(tabName) {
@@ -30,9 +34,15 @@ class Excel {
   }
 
   toConnect(path, tabName, visibility := true) {
-    Excel.instance.visible := visibility ? true : false
-    Excel.instance.Workbooks.Open(path)
-    Excel.instance.Sheets(tabName).Activate()
+    try {
+      Excel.instance.visible := visibility ? true : false
+      Excel.instance.Workbooks.Open(path)
+      Excel.instance.Sheets(tabName).Activate()
+    } catch e {
+      message := % "Exception what: " e.what " file: " e.file . " line:" e.line " message: " e.message " extra:" e.extra
+      this.logger.addError(message)
+      MsgBox, 16,, Falha ao tentar abrir a planilha.
+    }
   }
 
   toSave() {
