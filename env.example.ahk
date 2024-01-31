@@ -1,10 +1,9 @@
-LINK_WEBSITE_NERUS    = 
-USER                  = 
-PASSWORD              = 
-TERMINAL              = 
-SELLER                = 
-STORE                 = 
-
-LINK_WEBSITE_ARQUIVEI = 
-EMAIL                 = 
-PASSWORD_EMAIL        = 
+LINK_WEBSITE_NERUS =
+USER =
+PASSWORD =
+TERMINAL =
+SELLER =
+STORE =
+NEW_SESSION :=
+SPREADSHEET_PATH =
+LOGIN :=
