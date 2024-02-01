@@ -62,7 +62,17 @@ try {
   {
     if nf is integer 
     {
+      repeatPrice:
+      code  := excel.capture("B4", "input")
       price := excel.capture("E4", "input")
+
+      code_windows := fieldsNerus.getValueFromField(XPATH_CODIGO_ATUAL_JANELA_PRECIFICACAO)
+
+      if (code != code_windows) {
+        MsgBox, 4,, Codigo da planilha diferente do codigo atual da janela de precificacao. Deseja continuar mesmo assim?
+        IfMsgBox, No
+          goto, repeatPrice
+      }
 
       fieldsNerus.toFillIn(XPATH_PRECO_REFERENCIA_ATUAL_LABEL, XPATH_PRECO_REFERENCIA_ATUAL_INPUT, price)
 
