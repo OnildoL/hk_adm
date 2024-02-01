@@ -24,10 +24,10 @@ class Site {
     }
   }
 
-  getSessionInstance(tab := 1) {
+  getSessionInstance(tab_selected := 1) {
     try {
       chrome  := new Rufaydium()
-      session := chrome.getSession(tab)
+      session := chrome.getSession(tab_selected)
 
       return { page: session, chrome: chrome }
     } catch e {
