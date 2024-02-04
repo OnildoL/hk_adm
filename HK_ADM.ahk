@@ -188,7 +188,7 @@ scriptdir     := "%" . "A_ScriptDir" . "%"
 
 changeUserData = 
 (
-LINK_WEBSITE_NERUS = http://leitura.nerus.com.br
+LINK_WEBSITE_NERUS = %LINK_WEBSITE_NERUS%
 USER = %userFound%
 PASSWORD = %passwordFound%
 TERMINAL = %terminalFounnd%
@@ -234,7 +234,7 @@ scriptdir := "%" . "A_ScriptDir" . "%"
 
 changeUserData = 
 (
-LINK_WEBSITE_NERUS = http://leitura.nerus.com.br
+LINK_WEBSITE_NERUS = %LINK_WEBSITE_NERUS%
 USER = %User%
 PASSWORD = %Password%
 TERMINAL = %outTerminal%

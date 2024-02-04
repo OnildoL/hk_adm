@@ -7,22 +7,16 @@
 
 ## Informações sobre o repositório
 
-- Este repositório contém todos os arquivos de automações no sistema nerus para entrada de mercadorias, precificação, tributação de produtos, cadastro e outros.
+- Este repositório contém todos os arquivos de automações feitos para o sistema nerus para entrada de mercadorias, precificação, tributação de produtos, cadastro e outros. Apenas lojas da rede leitura tem permissão para utilizar a ferramenta, porém, o código é aberto para estudo.
 
 <br>
 
 ## 🚀 Como executar
 
--
+- Entrar em contato com o Onildo.
 
 <br>
 
-## Configurando variaveis
+## Segurança da informação
 
-1.
-
-<br />
-
-2.
-
-<br />
+- Quero ressaltar que nenhuma informação sensível está e/ou será exposta.
