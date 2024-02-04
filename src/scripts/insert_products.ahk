@@ -62,6 +62,7 @@ try {
   {
     if nf is integer 
     {
+      repeatInsertion:
       code := excel.capture("B4", "input", "number")
       qndt := excel.capture("C4", "input", "number")
       cost := excel.capture("D4", "input")
@@ -69,12 +70,20 @@ try {
       fieldsNerus.toFillIn(XPATH_CODIGO_DE_BARRA_LABEL, XPATH_CODIGO_DE_BARRA_INPUT, code)
       fieldsNerus.toFillIn(XPATH_QUANTIDADE_LABEL,      XPATH_QUANTIDADE_INPUT,      qndt)
 
-      fieldsNerus.insertMonetaryValue(XPATH_PRECO_INPUT, cost)
+      fieldsNerus.insertMonetaryValue(XPATH_PRECO_LABEL, XPATH_PRECO_INPUT, cost)
 
       fieldsNerus.detectFieldAndPressKey(XPATH_OBSERVACAO_LABEL,         "ENTER")
       fieldsNerus.detectFieldAndPressKey(XPATH_EMBALAGEM_SEGURO_LABEL,   "ENTER")
       fieldsNerus.detectFieldAndPressKey(XPATH_CREDITO_PIS_COFINS_LABEL, "ENTER")
       fieldsNerus.detectFieldAndPressKey(XPATH_CODE_POS_INSERIR_LABEL,   "ESC")
+
+      code_entered := fieldsNerus.getInnerTextFromField(XPATH_CODIGO_INSERIDO)
+
+      if (code != code_entered) {
+        MsgBox, 4,, Codigo da planilha diferente do codigo atual da janela de produtos inseridos. Deseja continuar mesmo assim?
+        IfMsgBox, No
+          goto, repeatInsertion
+      }
 
       sleep, 500
       send,  i

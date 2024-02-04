@@ -13,3 +13,4 @@ XPATH_EMBALAGEM_SEGURO_LABEL   = //*[@id="root"]/div[2]/div[5]/div/div[2]/form/d
 XPATH_CREDITO_PIS_COFINS_LABEL = //*[@id="root"]/div[2]/div[5]/div/div[2]/form/div[1]/div[8]/div/div/label
 
 XPATH_CODE_POS_INSERIR_LABEL   = //*[@id="root"]/div[2]/div[4]/div/div[2]/form/div[1]/div[2]/div[2]/div/div
+XPATH_CODIGO_INSERIDO          = //*[@id="root"]/div[2]/div[3]/div/div[2]/div/div[1]/div[2]/div[1]/div[2]/table/tbody/tr[1]/td[12]
