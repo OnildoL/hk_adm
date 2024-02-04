@@ -7,7 +7,7 @@
 
 ## Informações sobre o repositório
 
--
+- Este repositório contém todos os arquivos de automações no sistema nerus para entrada de mercadorias, precificação, tributação de produtos, cadastro e outros.
 
 <br>
 
