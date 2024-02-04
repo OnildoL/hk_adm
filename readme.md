@@ -19,4 +19,4 @@
 
 ## Segurança da informação
 
-- Quero ressaltar que nenhuma informação sensível está e/ou será exposta.
+- Nenhuma informação sensível está e/ou será exposta.
