@@ -15,6 +15,21 @@ class Excel {
     newTab.Name := tabName
   }
 
+  copyTab(existingTabName, newTabName) {
+    try {
+      existingTab := this.getTab(existingTabName)
+      
+      newTab := Excel.instance.Worksheets.Add()
+      newTab.Name := newTabName
+      
+      existingTab.UsedRange.Copy(newTab.Range("A1"))
+    } catch e {
+      message := "Exception: " e.what " file: " e.file . " line:" e.line " message: " e.message " extra:" e.extra
+      this.logger.addError(message)
+      MsgBox, 16,, Falha ao tentar copiar a aba.
+    }
+  }
+
   deleteTab(tabName) {
     tab := this.getTab(tabName)
     Excel.instance.DisplayAlerts := false
