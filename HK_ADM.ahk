@@ -13,12 +13,16 @@ FileReadLine, varSeller,     %A_ScriptDir%\env.ahk, 5
 FileReadLine, varStore,      %A_ScriptDir%\env.ahk, 6
 FileReadLine, varNewSession, %A_ScriptDir%\env.ahk, 7
 
+FileReadLine, varGetSpeed, %A_ScriptDir%\src\scripts\configurations\settings.ahk, 2
+
 RegExMatch(varUser, "(\d+)",          userFound)
 RegExMatch(varPassword, "(\d+)",      passwordFound)
 RegExMatch(varTerminal, "(NF\d+)",    terminalFounnd)
 RegExMatch(varSeller, "(\d+)",        sellerFound)
 RegExMatch(varStore, "(\d+)",         storeFound)
 RegExMatch(varNewSession, "(\D{5}$)", newSessionFound)
+
+RegExMatch(varGetSpeed, "(\d+)", speedFound)
 
 Gui, Add, Text,,         Dados do usuario registrado
 Gui, Add, Text, y+1,     -----------------------------------------------------
@@ -41,6 +45,12 @@ Gui, Tab, 2
 Gui, Add, Text,,         Planilha principal
 Gui, Add, Text, y+1,     -----------------------------------------------------
 Gui, Add, Button, -Default x32 y+8, Abrir planilha
+
+Gui, Add, Text,,         Velocidade do script
+Gui, Add, Text, y+1,     -----------------------------------------------------
+Gui, Add, Edit
+Gui, Add, UpDown, vSpeed Range1-100, %speedFound%
+Gui, Add, Button, -Default x32 y+8, Atualizar velocidade
 
 ;===============================================================================
 ;=============================       Relatorios      ===========================
@@ -107,7 +117,7 @@ Gui, Add, Button, -Default x32 y+10 w370, Salvar
 Gui, Tab
 
 Gui, Add, Text, xm, HK_ADM Created by Onildo.
-Gui, Add, Text, x+5 cRed, v0.1.4-alpha
+Gui, Add, Text, x+5 cRed, v0.1.5-alpha
 
 Gui, Show
 
@@ -191,6 +201,23 @@ LOGIN := %newLogin%
 
 FileDelete %A_ScriptDir%\env.ahk
 FileAppend, %changeUserData%, %A_ScriptDir%\env.ahk
+
+Run, %A_ScriptDir%\HK_ADM.ahk
+return
+
+;===============================================================================
+
+ButtonAtualizarvelocidade:
+Gui, Submit
+
+changeSettingsData = 
+(
+#SingleInstance, Force
+SetKeyDelay, %Speed%
+)
+
+FileDelete %A_ScriptDir%\src\scripts\configurations\settings.ahk
+FileAppend, %changeSettingsData%, %A_ScriptDir%\src\scripts\configurations\settings.ahk
 
 Run, %A_ScriptDir%\HK_ADM.ahk
 return
