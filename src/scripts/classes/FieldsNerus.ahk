@@ -35,12 +35,27 @@ class FieldsNerus {
     }
   }
 
-  insertMonetaryValue(xpath, value) {
-    this.logger.addInfo("NF: " . this.nf . " Field: " . xpath . " Value: " . value)
+  getInnerTextFromField(xpath) {
+    repeatGetInnerTextFromField:
+    result := this.page.getElementsByXpath(xpath)[0].innerText
 
-    valueWithoutPoint := StrReplace(value, ".", "")
+    if (result != "") {
+      return result
+    } else {
+      goto, repeatGetInnerTextFromField
+    }
+  }
 
-    this.insertValueIntoField(xpath, valueWithoutPoint)
+  insertMonetaryValue(xpath_label, xpath_input, value) {
+    focused := this.detectFocusedField(xpath_label)
+
+    if (focused) {
+      this.logger.addInfo("NF: " . this.nf . " Field: " . xpath_input . " Value: " . value)
+
+      valueWithoutPoint := StrReplace(value, ".", "")
+
+      this.insertValueIntoField(xpath_input, valueWithoutPoint)
+    }
   }
 
   compareNerusTextMessageAndPressKey(xpath, value, key) {
