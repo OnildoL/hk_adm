@@ -86,8 +86,9 @@ try {
       product_value := fieldsNerus.getValueFromField(XPATH_VALOR_PRODUTO_INPUT)
 
       if (product_value != base_icms) {
-        msgbox, 16,, O valor bruto desse produto nao corresponde ao valor da linha atual na planilha.
-        goto, checkIfValuesMatch
+        msgbox, 4,, O valor bruto desse produto nao corresponde ao valor da linha atual na planilha.
+        IfMsgBox, No
+          goto, checkIfValuesMatch
       }
 
       fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_DESCONTO_LABEL,  "ENTER")
@@ -95,16 +96,18 @@ try {
       fieldsNerus.detectFieldAndPressKey(XPATH_OUTRAS_DESPESAS_LABEL, "ENTER")
       fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_SEGURO_LABEL,    "ENTER")
 
-      fieldsNerus.toFillIn(XPATH_BASE_CALCULO_ICMS_LABEL, XPATH_BASE_CALCULO_ICMS_INPUT, base_icms)
-      fieldsNerus.toFillIn(XPATH_ALIQUOTA_ICMS_LABEL, XPATH_ALIQUOTA_ICMS_INPUT,         icms)
+      fieldsNerus.insertMonetaryValue(XPATH_BASE_CALCULO_ICMS_LABEL, XPATH_BASE_CALCULO_ICMS_INPUT, base_icms)
+      fieldsNerus.toFillIn(XPATH_ALIQUOTA_ICMS_LABEL, XPATH_ALIQUOTA_ICMS_INPUT, icms)
 
       fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_ICMS_LABEL, "ENTER")
       fieldsNerus.compareNerusTextMessageAndPressKey(XPATH_MESSAGEM_VALOR_INFORMADO, "informado nao corresponde", "ENTER")
       fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_ICMS_LABEL, "ENTER")
 
-      fieldsNerus.toFillIn(XPATH_BASE_CALCULO_IPI_LABEL, XPATH_BASE_CALCULO_IPI_INPUT, base_ipi)
+      fieldsNerus.insertMonetaryValue(XPATH_BASE_CALCULO_IPI_LABEL, XPATH_BASE_CALCULO_IPI_INPUT, base_ipi)
 
-      if (ipi != "0.00") {
+      value_ipi_field := fieldsNerus.getValueFromField(XPATH_ALIQUOTA_IPI_INPUT, false)
+
+      if (ipi != "0.00" && value_ipi_field != ipi) {
         fieldsNerus.toFillIn(XPATH_ALIQUOTA_IPI_LABEL, XPATH_ALIQUOTA_IPI_INPUT, ipi)
         fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_IPI_LABEL, "ENTER")
         fieldsNerus.compareNerusTextMessageAndPressKey(XPATH_MESSAGEM_VALOR_INFORMADO, "informado nao corresponde", "ENTER")
