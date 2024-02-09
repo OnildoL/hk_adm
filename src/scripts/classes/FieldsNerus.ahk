@@ -24,13 +24,16 @@ class FieldsNerus {
     }
   }
 
-  getValueFromField(xpath) {
+  getValueFromField(xpath, repeat := true) {
     repeatGetValueFromField:
     result := this.page.getElementsByXpath(xpath)[0].value
 
     if (result != "") {
       return result
     } else {
+      if (!repeat) {
+        return result
+      }
       goto, repeatGetValueFromField
     }
   }
@@ -47,14 +50,25 @@ class FieldsNerus {
   }
 
   insertMonetaryValue(xpath_label, xpath_input, value) {
+    this.logger.addInfo("NF: " . this.nf . " Field: " . xpath . " Value: " . value)
+
+    valueWithoutPoint := StrReplace(value, ".", "")
+
     focused := this.detectFocusedField(xpath_label)
 
     if (focused) {
-      this.logger.addInfo("NF: " . this.nf . " Field: " . xpath_input . " Value: " . value)
+      repeatInsertMonetaryValue:
+      send, {SHIFTDOWN}{END}{SHIFTUP}{DEL}
+      send, % valueWithoutPoint
+      
+      fieldValue := this.page.getElementsbyXpath(xpath_input)[0].value
 
-      valueWithoutPoint := StrReplace(value, ".", "")
-
-      this.insertValueIntoField(xpath_input, valueWithoutPoint)
+      if (fieldValue == value) {
+        send, {ENTER}
+      } else {
+        send, {HOME}
+        goto, repeatInsertMonetaryValue
+      }
     }
   }
 
