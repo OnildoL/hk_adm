@@ -97,10 +97,17 @@ try {
       fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_SEGURO_LABEL,    "ENTER")
 
       fieldsNerus.insertMonetaryValue(XPATH_BASE_CALCULO_ICMS_LABEL, XPATH_BASE_CALCULO_ICMS_INPUT, base_icms)
-      fieldsNerus.toFillIn(XPATH_ALIQUOTA_ICMS_LABEL, XPATH_ALIQUOTA_ICMS_INPUT, icms)
 
-      fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_ICMS_LABEL, "ENTER")
-      fieldsNerus.compareNerusTextMessageAndPressKey(XPATH_MESSAGEM_VALOR_INFORMADO, "informado nao corresponde", "ENTER")
+      value_icms_field := fieldsNerus.getValueFromField(XPATH_ALIQUOTA_ICMS_INPUT, false)
+
+      if (icms != "0.00" && value_icms_field != icms) {
+        fieldsNerus.toFillIn(XPATH_ALIQUOTA_ICMS_LABEL, XPATH_ALIQUOTA_ICMS_INPUT, icms)
+        fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_ICMS_LABEL, "ENTER")
+        fieldsNerus.compareNerusTextMessageAndPressKey(XPATH_MESSAGEM_VALOR_INFORMADO, "informado nao corresponde", "ENTER")
+      } else  {
+        fieldsNerus.detectFieldAndPressKey(XPATH_ALIQUOTA_ICMS_LABEL, "ENTER")
+      }
+
       fieldsNerus.detectFieldAndPressKey(XPATH_VALOR_ICMS_LABEL, "ENTER")
 
       fieldsNerus.insertMonetaryValue(XPATH_BASE_CALCULO_IPI_LABEL, XPATH_BASE_CALCULO_IPI_INPUT, base_ipi)
